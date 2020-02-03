@@ -28,6 +28,14 @@ function renderComic(comic) {
     comicImg.src = comic.image
     comicImg.classList += "comic-image"
     comicCard.appendChild(comicImg)
+
+    let deleteButton = document.createElement('button')
+    deleteButton.innerText = "Delete Heroine"
+    deleteButton.classList += "delete-button"
+    comicCard.appendChild(deleteButton)
+
+    deleteButton.dataset.id = comic.id
+    deleteButton.addEventListener("click", deleteEvent)
 }
 
 function getForm(){
@@ -51,4 +59,14 @@ function newForm(e){
         body: JSON.stringify(newComic)
       }).then(response => response.json())
       .then(comic => renderComic(comic))
+}
+
+
+function deleteEvent(){
+        comicId = event.currentTarget.dataset.id
+        fetch("http://localhost:3000/heroines/" + comicId, {
+          method: 'DELETE',
+        }).then(response => response.json()).then(json => console.log(json))
+        event.currentTarget.remove()
+       location.reload()
 }
