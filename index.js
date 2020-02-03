@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Loaded!")
     getAllComics()
+    getForm().addEventListener('submit', newForm)
 })
 
 function getAllComics(){
@@ -27,4 +28,27 @@ function renderComic(comic) {
     comicImg.src = comic.image
     comicImg.classList += "comic-image"
     comicCard.appendChild(comicImg)
+}
+
+function getForm(){
+    return document.querySelector('#heroine-form')
+}
+
+function newForm(e){
+    e.preventDefault()
+    console.log('clicking submit')
+    let newTitle = e.target.title.value
+    let newDesc = e.target.description.value
+    let newImg = e.target.image.value
+
+    let newComic = {title: newTitle, description: newDesc, image: newImg}
+    e.target.reset()
+    fetch('http://localhost:3000/heroines',{ 
+        method: "POST", 
+        headers: { 
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newComic)
+      }).then(response => response.json())
+      .then(comic => renderComic(comic))
 }
